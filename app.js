@@ -1,15 +1,50 @@
 const http = require('http');
+const fs = require('fs');
 const port = 3000;
 
 const server = http.createServer(function (req, res) {
-  res.write('Hello Node');
-  res.end();
+  res.writeHead(200, { 'Content-Type': 'text/html' });
+  switch (req.url) {
+    case '/':
+      fs.readFile('index.html', function (error, data) {
+        if (error) {
+          res.writeHead(404);
+          res.write('Error:', error);
+        } else {
+          res.write(data);
+        }
+        res.end();
+      });
+      break;
+    case '/about':
+      fs.readFile('about.html', (error, data) => {
+        if (error) {
+          res.writeHead(404);
+          res.write('Error:', error);
+        } else {
+          res.write(data);
+        }
+        res.end();
+      });
+      break;
+    default:
+      fs.readFile('404.html', (error, data) => {
+        if (error) {
+          res.writeHead(404);
+          res.write('Error:', error);
+        } else {
+          res.write(data);
+        }
+        res.end();
+      });
+  }
 });
 
 server.listen(port, function (error) {
+  ``;
   if (error) {
     console.log('Something went wrong', error);
   } else {
-    console.log('Server is listening on port' + port);
+    console.log('Server is listening on port ' + port);
   }
 });
